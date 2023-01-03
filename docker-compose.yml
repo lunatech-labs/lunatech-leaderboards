@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=leaderboards
+    ports:
+      - '5432:5432'
+    volumes:
+      - dbdata:/data
+
+  flyway:
+    image: flyway/flyway:9.10.2
+    command: -configFiles=/flyway/conf/flyway.config -connectRetries=60 migrate
+    depends_on:
+      - db
+    volumes:
+      - ./database/scripts:/flyway/scripts
+      - ./database/flyway/flyway.config:/flyway/conf/flyway.config
+
+#  leaderboard:
+#    build:
+#      dockerfile: leaderboards/src/main/docker/Dockerfile.native-micro
+#      context: .
+#    depends_on:
+#      - db
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - appdata:/data
+
+volumes:
+  dbdata:
+  appdata:
