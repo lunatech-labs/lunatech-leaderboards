@@ -1,6 +1,11 @@
 package com.lunatech.leaderboards.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,8 +25,18 @@ public class MatchUser extends PanacheEntityBase {
     @JoinColumn(name = "match")
     public Match match;
 
+    @Column(name = "team")
+    @Enumerated(EnumType.STRING)
+    public Team team;
+
     @Column(name = "outcome_confirmed")
     public boolean outcomeConfirmed;
 
-    public record MatchUserId(User user, Match match) implements Serializable {}
+    @Data
+    public static class MatchUserId implements Serializable {
+        private User user;
+        private Match match;
+    }
+
+    public enum Team {TEAM_A, TEAM_B}
 }

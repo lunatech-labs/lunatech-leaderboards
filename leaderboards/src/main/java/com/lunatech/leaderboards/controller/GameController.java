@@ -1,6 +1,6 @@
 package com.lunatech.leaderboards.controller;
 
-import com.lunatech.leaderboards.dto.GameDto;
+import com.lunatech.leaderboards.dto.game.GameDto;
 import com.lunatech.leaderboards.entity.Game;
 
 import javax.transaction.Transactional;

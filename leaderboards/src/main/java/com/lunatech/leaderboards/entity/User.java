@@ -15,5 +15,5 @@ public class User extends PanacheEntity {
     public String displayName;
 
     @Column(name = "profilepicurl")
-    public String profilepicurl;
+    public String profilePicUrl;
 }

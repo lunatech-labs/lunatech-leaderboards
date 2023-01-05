@@ -1,6 +1,7 @@
 package com.lunatech.leaderboards.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,5 +25,9 @@ public class LeaderboardUser extends PanacheEntityBase {
     @Column(name = "growth_factor")
     public Integer growthFactor;
 
-    public record LeaderboardUserId(User user, GameMode gameMode) implements Serializable {}
+    @Data
+    public class LeaderboardUserId implements Serializable {
+        private User user;
+        private GameMode gameMode;
+    }
 }

@@ -1,4 +1,4 @@
-package com.lunatech.leaderboards.dto;
+package com.lunatech.leaderboards.dto.game;
 
 import com.lunatech.leaderboards.entity.Game;
 

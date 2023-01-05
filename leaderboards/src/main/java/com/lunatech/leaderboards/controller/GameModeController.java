@@ -1,10 +1,10 @@
 package com.lunatech.leaderboards.controller;
 
-import com.lunatech.leaderboards.dto.GameDto;
-import com.lunatech.leaderboards.dto.GameModeDto;
+import com.lunatech.leaderboards.dto.gamemode.GameModeDto;
+import com.lunatech.leaderboards.dto.gamemode.GameModeLeaderboardDto;
+import com.lunatech.leaderboards.dto.gamemode.GameModePostDto;
 import com.lunatech.leaderboards.entity.Game;
 import com.lunatech.leaderboards.entity.GameMode;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -29,9 +29,16 @@ public class GameModeController {
         return Response.ok(response).build();
     }
 
+    @GET
+    @Path("/{gameModeId}")
+    public Response leaderboard(Long gameModeId) {
+        GameMode gameMode = GameMode.findByIdWithLeaderboard(gameModeId);
+        return Response.ok(new GameModeLeaderboardDto(gameMode)).build();
+    }
+
     @POST
     @Transactional
-    public Response add(@Valid GameModeDto body) {
+    public Response add(@Valid GameModePostDto body) {
         GameMode gameMode = body.toEntity();
         if(!Objects.equals(gameMode.game.id, gameId))
             throw new BadRequestException("GameMode game does not match path");
@@ -39,7 +46,7 @@ public class GameModeController {
         gameMode.persist();
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameMode.id))
-                .entity(new GameModeDto(gameMode))
+                .entity(new GameModePostDto(gameMode))
                 .build();
     }
 
@@ -53,6 +60,6 @@ public class GameModeController {
 
         gameMode.delete();
 
-        return Response.ok(new GameModeDto(gameMode)).build();
+        return Response.ok(new GameModePostDto(gameMode)).build();
     }
 }
