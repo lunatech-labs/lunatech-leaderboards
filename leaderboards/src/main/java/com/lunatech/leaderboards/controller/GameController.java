@@ -2,16 +2,15 @@ package com.lunatech.leaderboards.controller;
 
 import com.lunatech.leaderboards.dto.GameDto;
 import com.lunatech.leaderboards.entity.Game;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import lombok.extern.java.Log;
 
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Log
 @Path("/games")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,9 +24,21 @@ public class GameController {
     }
 
     @POST
-    public Response add(GameDto body) {
+    @Transactional
+    public Response add(@Valid GameDto body) {
         Game game = body.toEntity();
         game.persist();
+        return Response.created(URI.create("/games/"+game.id))
+                .entity(new GameDto(game))
+                .build();
+    }
+
+    @DELETE
+    @Path("/{gameId}")
+    @Transactional
+    public Response delete(Long gameId) {
+        Game game = Game.findById(gameId);
+        game.delete();
         return Response.ok(game).build();
     }
 }

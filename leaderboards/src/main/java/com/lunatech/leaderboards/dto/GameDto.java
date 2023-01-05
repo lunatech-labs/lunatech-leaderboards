@@ -2,7 +2,13 @@ package com.lunatech.leaderboards.dto;
 
 import com.lunatech.leaderboards.entity.Game;
 
-public record GameDto(Long id, String name, String imageUrl) {
+import javax.validation.constraints.NotBlank;
+
+public record GameDto(
+        Long id,
+        @NotBlank String name,
+        String imageUrl
+) {
     public GameDto(Game game) {
         this(game.id, game.name, game.imageUrl);
     }

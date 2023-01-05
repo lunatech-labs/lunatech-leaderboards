@@ -3,7 +3,15 @@ package com.lunatech.leaderboards.dto;
 import com.lunatech.leaderboards.entity.Game;
 import com.lunatech.leaderboards.entity.GameMode;
 
-public record GameModeDto(Long id, String name, String rules, Long gameId) {
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+public record GameModeDto(
+        Long id,
+        @NotBlank String name,
+        @NotBlank String rules,
+        @NotNull Long gameId
+) {
     public GameModeDto(GameMode gameMode) {
         this(gameMode.id, gameMode.name, gameMode.rules, gameMode.game.id);
     }

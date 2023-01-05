@@ -21,7 +21,7 @@ public class LeaderboardUser extends PanacheEntityBase {
 
     public Integer score;
 
-    @JoinColumn(name = "growth_factor")
+    @Column(name = "growth_factor")
     public Integer growthFactor;
 
     public record LeaderboardUserId(User user, GameMode gameMode) implements Serializable {}
