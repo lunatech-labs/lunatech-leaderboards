@@ -1,10 +1,13 @@
 package com.lunatech.leaderboards.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.panache.common.Parameters;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "leaderboard_user")
@@ -29,5 +32,19 @@ public class LeaderboardUser extends PanacheEntityBase {
     public class LeaderboardUserId implements Serializable {
         private User user;
         private GameMode gameMode;
+    }
+
+    public static LeaderboardUser findByUserAndGamemode(Long userId, Long gameModeId) {
+        return find("gameMode.id = :gameMode and user.id = :user",
+                Parameters.with("gameMode", gameModeId),
+                Parameters.with("user", userId))
+                .singleResult();
+    }
+
+    public static List<LeaderboardUser> findByUsersAndGamemode(Collection<Long> usersIds, Long gameModeId) {
+        return find("gameMode.id = :gameMode and user.id in (:users)",
+                Parameters.with("gameMode", gameModeId),
+                Parameters.with("users", usersIds))
+                .list();
     }
 }

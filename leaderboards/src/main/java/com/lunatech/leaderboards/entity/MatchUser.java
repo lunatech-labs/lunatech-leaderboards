@@ -1,6 +1,7 @@
 package com.lunatech.leaderboards.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.panache.common.Parameters;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,6 +32,13 @@ public class MatchUser extends PanacheEntityBase {
 
     @Column(name = "outcome_confirmed")
     public boolean outcomeConfirmed;
+
+    public static MatchUser findByMatchAndUser(Long match, Long user) {
+        return find("match.id = :match and user.id = :user",
+                Parameters.with("match", match),
+                Parameters.with("user", user))
+                .singleResult();
+    }
 
     @Data
     public static class MatchUserId implements Serializable {

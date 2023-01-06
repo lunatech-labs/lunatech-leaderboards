@@ -25,6 +25,9 @@ public class Match extends PanacheEntity {
     @Where(clause = "team = 'TEAM_B'")
     public List<MatchUser> teamB;
 
+    @Column
+    public boolean confirmed;
+
     public enum Outcome {
         TEAM_A, TEAM_B, DRAW, CANCELLED, ONGOING
     }
