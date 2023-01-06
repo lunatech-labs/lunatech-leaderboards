@@ -7,16 +7,17 @@ import com.lunatech.leaderboards.entity.User;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Named
+@Singleton
 public class MatchService {
 
     @Inject
-    private LeaderboardService leaderboardService;
+    LeaderboardService leaderboardService;
 
     public Collection<Match> findByGameMode(Long gameModeId) {
         return GameMode.findByIdWithMatches(gameModeId).matches;

@@ -2,9 +2,7 @@ package com.lunatech.leaderboards.controller;
 
 import com.lunatech.leaderboards.dto.match.MatchDto;
 import com.lunatech.leaderboards.dto.match.MatchPostDto;
-import com.lunatech.leaderboards.entity.GameMode;
 import com.lunatech.leaderboards.entity.Match;
-import com.lunatech.leaderboards.entity.User;
 import com.lunatech.leaderboards.service.MatchService;
 
 import javax.inject.Inject;
@@ -19,7 +17,7 @@ import java.util.List;
 public class MatchController {
 
     @Inject
-    private MatchService matchService;
+    MatchService matchService;
 
     @PathParam("gameId")
     private Long gameId;

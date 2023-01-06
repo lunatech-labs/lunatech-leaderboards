@@ -22,15 +22,19 @@ CREATE TABLE game_mode (
 
 CREATE TYPE match_outcome AS ENUM ('TEAM_A', 'TEAM_B', 'DRAW', 'CANCELLED', 'ONGOING');
 
+CREATE TYPE match_team AS ENUM ('TEAM_A', 'TEAM_B');
+
 CREATE TABLE match (
     id BIGSERIAL PRIMARY KEY,
     outcome match_outcome NOT NULL,
-    game_mode BIGINT NOT NULL REFERENCES game_mode
+    game_mode BIGINT NOT NULL REFERENCES game_mode,
+    confirmed BOOLEAN DEFAULT false
 );
 
 CREATE TABLE match_user (
     app_user BIGINT NOT NULL REFERENCES app_user,
     match BIGINT NOT NULL REFERENCES match,
+    team match_team NULL,
     outcome_confirmed BOOLEAN DEFAULT false,
     PRIMARY KEY (app_user, match)
 );

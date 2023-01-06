@@ -4,14 +4,17 @@ import com.lunatech.leaderboards.dto.leaderboarduser.MatchExpectedResult;
 import com.lunatech.leaderboards.entity.*;
 import io.quarkus.hibernate.orm.panache.Panache;
 
-import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Named
+@Singleton
 public class LeaderboardService {
 
     public void evaluateMatch(Collection<User> teamA, Collection<User> teamB, Match match) {
@@ -19,23 +22,23 @@ public class LeaderboardService {
         Collection<LeaderboardUser> teamALeaderboard = getLeaderboardUsers(match.gameMode, teamA);
         Collection<LeaderboardUser> teamBLeaderboard = getLeaderboardUsers(match.gameMode, teamB);
 
-        MatchExpectedResult expectedResult = calculateExpectedResults(teamALeaderboard, teamBLeaderboard, match.gameMode);
+        MatchExpectedResult expectedResult = calculateExpectedResults(teamALeaderboard, teamBLeaderboard);
 
         adjustPlayerRatings(match.outcome, teamALeaderboard, teamBLeaderboard, expectedResult);
     }
 
-    public MatchExpectedResult calculateExpectedResults(Collection<LeaderboardUser> teamA, Collection<LeaderboardUser> teamB, GameMode gameMode) {
-        int teamAScore = getTeamScore(gameMode, teamA);
-        int teamBScore = getTeamScore(gameMode, teamB);
+    public MatchExpectedResult calculateExpectedResults(Collection<LeaderboardUser> teamA, Collection<LeaderboardUser> teamB) {
+        int teamAScore = getTeamScore(teamA);
+        int teamBScore = getTeamScore(teamB);
 
-        Function<Integer, Integer> calculateFactor = score -> (int) Math.pow(10, (double) score / 400);
-        int teamAFactor = calculateFactor.apply(teamAScore);
-        int teamBFactor = calculateFactor.apply(teamBScore);
+        Function<Integer, Double> calculateFactor = score -> Math.pow(10, score / 400d);
+        double teamAFactor = calculateFactor.apply(teamAScore);
+        double teamBFactor = calculateFactor.apply(teamBScore);
 
-        BiFunction<Integer, Integer, Integer> calculateExpectedResult = (factor, opponentFactor) ->
+        BiFunction<Double, Double, Double> calculateExpectedResult = (factor, opponentFactor) ->
                 factor / (factor + opponentFactor);
-        int teamAExpectedResult = calculateExpectedResult.apply(teamAFactor, teamBFactor);
-        int teamBExpectedResult = calculateExpectedResult.apply(teamBFactor, teamAFactor);
+        double teamAExpectedResult = calculateExpectedResult.apply(teamAFactor, teamBFactor);
+        double teamBExpectedResult = calculateExpectedResult.apply(teamBFactor, teamAFactor);
 
         return new MatchExpectedResult(teamAExpectedResult, teamBExpectedResult);
     }
@@ -49,7 +52,7 @@ public class LeaderboardService {
         leaderboardUser.persist();
     }
 
-    private Integer getTeamScore(GameMode gameMode, Collection<LeaderboardUser> team) {
+    private Integer getTeamScore(Collection<LeaderboardUser> team) {
         Integer teamTotal = team.stream()
                 .map(lu -> lu.score)
                 .reduce(0, Integer::sum);

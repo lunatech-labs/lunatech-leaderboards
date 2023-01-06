@@ -10,6 +10,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity
 @Table(name = "match_user")
@@ -35,8 +36,7 @@ public class MatchUser extends PanacheEntityBase {
 
     public static MatchUser findByMatchAndUser(Long match, Long user) {
         return find("match.id = :match and user.id = :user",
-                Parameters.with("match", match),
-                Parameters.with("user", user))
+                Map.of("match", match, "user", user))
                 .singleResult();
     }
 

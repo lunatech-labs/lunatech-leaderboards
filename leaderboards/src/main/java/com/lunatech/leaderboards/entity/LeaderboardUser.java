@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "leaderboard_user")
@@ -29,22 +30,20 @@ public class LeaderboardUser extends PanacheEntityBase {
     public Integer growthFactor;
 
     @Data
-    public class LeaderboardUserId implements Serializable {
+    public static class LeaderboardUserId implements Serializable {
         private User user;
         private GameMode gameMode;
     }
 
     public static LeaderboardUser findByUserAndGamemode(Long userId, Long gameModeId) {
         return find("gameMode.id = :gameMode and user.id = :user",
-                Parameters.with("gameMode", gameModeId),
-                Parameters.with("user", userId))
+                Map.of("gameMode", gameModeId,"user", userId))
                 .singleResult();
     }
 
     public static List<LeaderboardUser> findByUsersAndGamemode(Collection<Long> usersIds, Long gameModeId) {
         return find("gameMode.id = :gameMode and user.id in (:users)",
-                Parameters.with("gameMode", gameModeId),
-                Parameters.with("users", usersIds))
+                Map.of("gameMode", gameModeId,"users", usersIds))
                 .list();
     }
 }
