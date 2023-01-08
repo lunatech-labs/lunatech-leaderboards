@@ -21,9 +21,7 @@ services:
       - ./database/flyway/flyway.config:/flyway/conf/flyway.config
 
   leaderboard:
-    build:
-      dockerfile: leaderboards/src/main/docker/Dockerfile.native-micro
-      context: .
+    image: lunatech-leaderboards-leaderboard:latest
     depends_on:
       - db
     ports:

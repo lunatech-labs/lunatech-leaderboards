@@ -1,5 +1,3 @@
-CREATE SEQUENCE hibernate_sequence START 1 INCREMENT 1;
-
 CREATE TABLE app_user (
     id BIGSERIAL PRIMARY KEY,
     email TEXT NOT NULL,

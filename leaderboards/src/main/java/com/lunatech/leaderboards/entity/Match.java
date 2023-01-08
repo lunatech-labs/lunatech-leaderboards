@@ -1,6 +1,6 @@
 package com.lunatech.leaderboards.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -8,7 +8,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "match")
-public class Match extends PanacheEntity {
+public class Match extends PanacheEntityBase {
+
+    @Id
+    @SequenceGenerator(name="match_id_seq", sequenceName="match_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="match_id_seq")
+    @Column(name = "id", updatable=false)
+    public Long id;
 
     @Enumerated(EnumType.STRING)
     public Outcome outcome;

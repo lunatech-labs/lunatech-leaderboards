@@ -4,16 +4,21 @@ import com.lunatech.leaderboards.dto.match.MatchDto;
 import com.lunatech.leaderboards.dto.match.MatchPostDto;
 import com.lunatech.leaderboards.entity.Match;
 import com.lunatech.leaderboards.service.MatchService;
+import io.quarkus.security.Authenticated;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
 @Path("/games/{gameId}/gamemodes/{gameModeId}/matches")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class MatchController {
 
     @Inject

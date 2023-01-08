@@ -1,6 +1,7 @@
 package com.lunatech.leaderboards.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Parameters;
 
 import javax.persistence.*;
@@ -8,7 +9,14 @@ import java.util.Set;
 
 @Entity
 @Table(name = "game_mode")
-public class GameMode extends PanacheEntity {
+public class GameMode extends PanacheEntityBase {
+
+    @Id
+    @SequenceGenerator(name="game_mode_id_seq", sequenceName="game_mode_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="game_mode_id_seq")
+    @Column(name = "id", updatable=false)
+    public Long id;
+
     public String name;
 
     public String rules;

@@ -2,6 +2,7 @@ package com.lunatech.leaderboards.controller;
 
 import com.lunatech.leaderboards.dto.game.GameDto;
 import com.lunatech.leaderboards.entity.Game;
+import io.quarkus.security.Authenticated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import java.util.List;
 @Path("/games")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class GameController {
 
     @GET

@@ -5,16 +5,21 @@ import com.lunatech.leaderboards.dto.gamemode.GameModeLeaderboardDto;
 import com.lunatech.leaderboards.dto.gamemode.GameModePostDto;
 import com.lunatech.leaderboards.entity.Game;
 import com.lunatech.leaderboards.entity.GameMode;
+import io.quarkus.security.Authenticated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
 @Path("/games/{gameId}/gamemodes")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class GameModeController {
 
     @PathParam("gameId")
