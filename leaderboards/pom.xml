@@ -87,6 +87,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-config-yaml</artifactId>
+        </dependency>
+
         <!-- Quarkus Test -->
         <dependency>
             <groupId>io.quarkus</groupId>

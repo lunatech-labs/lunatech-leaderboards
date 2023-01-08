@@ -1,0 +1,3 @@
+quarkus:
+  oidc:
+    auth-server-url: ${KEYCLOAK_HOST}/realms/lunatech

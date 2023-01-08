@@ -1,0 +1,24 @@
+quarkus:
+  # Data source
+  datasource:
+    db-kind: postgresql
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    jdbc:
+      url: jdbc:postgresql://db:5432/leaderboards?stringtype=unspecified
+
+  # Security
+  oidc:
+    credentials:
+      secret: ${KEYCLOAK_SECRET}
+    client-id: leaderboards
+    tls:
+      verification: required
+
+  keycloak:
+    policy-enforcer:
+      enable: false
+
+  # Swagger
+  swagger-ui:
+    always-include: true

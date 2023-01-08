@@ -1,0 +1,21 @@
+quarkus:
+  # Data source
+  datasource:
+    username: postgres
+    password: postgres
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/leaderboards?stringtype=unspecified
+
+  # Security
+  oidc:
+    tls:
+      verification: none
+
+  keycloak:
+    devservices:
+      enabled: true
+      users:
+        admin: adminPWD
+        user: userPWD
+      roles:
+        admin: admin
