@@ -15,3 +15,4 @@ quarkus:
     devservices:
       enabled: true
       realm-path: quarkus-realm.json
+      port: 8081
