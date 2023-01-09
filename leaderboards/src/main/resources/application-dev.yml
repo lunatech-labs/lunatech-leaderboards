@@ -14,8 +14,4 @@ quarkus:
   keycloak:
     devservices:
       enabled: true
-      users:
-        admin: adminPWD
-        user: userPWD
-      roles:
-        admin: admin
+      realm-path: quarkus-realm.json
