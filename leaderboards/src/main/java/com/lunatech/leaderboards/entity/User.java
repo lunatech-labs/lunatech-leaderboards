@@ -15,9 +15,10 @@ public class User extends PanacheEntityBase {
     @Column(name = "id", updatable=false)
     public Long id;
 
+    @Column(unique = true)
     public String email;
 
-    @Column(name = "displayname")
+    @Column(name = "displayname", unique = true)
     public String displayName;
 
     @Column(name = "profilepicurl")

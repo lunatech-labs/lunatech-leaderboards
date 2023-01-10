@@ -3,11 +3,10 @@ package com.lunatech.leaderboards.controller;
 import com.lunatech.leaderboards.dto.user.UserDto;
 import com.lunatech.leaderboards.dto.user.UserPostDto;
 import com.lunatech.leaderboards.entity.User;
+import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -28,7 +27,10 @@ public class UserController {
     @GET
     @Path("/me")
     public Response me() {
-        return Response.ok(securityIdentity.getPrincipal()).build();
+        String email = securityEmail();
+        return User.<User>find("email", email).singleResultOptional()
+                .map(user -> Response.ok(new UserDto(user)).build())
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not in leaderboards"));
     }
 
     @GET
@@ -49,10 +51,16 @@ public class UserController {
     @POST
     @Transactional
     public Response add(UserPostDto body) {
-        User user = body.toEntity();
+        String email = securityEmail();
+        User user = body.toEntity(email);
         user.persist();
         return Response.created(URI.create("/users/" + user.id))
                 .entity(new UserDto(user))
                 .build();
+    }
+
+    private String securityEmail() {
+        OidcJwtCallerPrincipal oidcPrincipal = (OidcJwtCallerPrincipal) securityIdentity.getPrincipal();
+        return oidcPrincipal.getClaim("email");
     }
 }

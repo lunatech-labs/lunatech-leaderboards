@@ -3,8 +3,11 @@ package com.lunatech.leaderboards.controller;
 import com.lunatech.leaderboards.dto.match.MatchDto;
 import com.lunatech.leaderboards.dto.match.MatchPostDto;
 import com.lunatech.leaderboards.entity.Match;
+import com.lunatech.leaderboards.entity.User;
 import com.lunatech.leaderboards.service.MatchService;
+import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.Authenticated;
+import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -20,6 +23,9 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Authenticated
 public class MatchController {
+
+    @Inject
+    SecurityIdentity securityIdentity;
 
     @Inject
     MatchService matchService;
@@ -51,9 +57,15 @@ public class MatchController {
     @POST
     @Path("/{matchId}/accept")
     @Transactional
-    public Response accept(Long matchId, @QueryParam("user") Long userId) {
-        matchService.accept(matchId, userId);
+    public Response accept(Long matchId) {
+        User user = User.find("email", securityEmail()).singleResult();
+        matchService.accept(matchId, user.id);
 
         return Response.ok().build();
+    }
+
+    private String securityEmail() {
+        OidcJwtCallerPrincipal oidcPrincipal = (OidcJwtCallerPrincipal) securityIdentity.getPrincipal();
+        return oidcPrincipal.getClaim("email");
     }
 }

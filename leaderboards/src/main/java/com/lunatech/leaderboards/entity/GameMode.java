@@ -17,6 +17,7 @@ public class GameMode extends PanacheEntityBase {
     @Column(name = "id", updatable=false)
     public Long id;
 
+    @Column(unique = true)
     public String name;
 
     public String rules;

@@ -1,19 +1,19 @@
 CREATE TABLE app_user (
     id BIGSERIAL PRIMARY KEY,
-    email TEXT NOT NULL,
-    displayName TEXT,
+    email TEXT NOT NULL UNIQUE,
+    displayName TEXT UNIQUE,
     profilePicUrl TEXT
 );
 
 CREATE TABLE game (
     id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     image_url TEXT
 );
 
 CREATE TABLE game_mode (
     id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     rules TEXT,
     game BIGINT NOT NULL REFERENCES game
 );

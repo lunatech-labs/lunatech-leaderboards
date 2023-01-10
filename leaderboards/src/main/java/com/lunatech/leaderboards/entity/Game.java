@@ -17,6 +17,7 @@ public class Game extends PanacheEntityBase {
     @Column(name = "id", updatable=false)
     public Long id;
 
+    @Column(unique = true)
     public String name;
 
     @Column(name = "image_url")
