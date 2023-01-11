@@ -1,0 +1,1 @@
+docker stop keycloak_temp_instance

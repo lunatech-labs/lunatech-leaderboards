@@ -9,6 +9,7 @@ import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -21,7 +22,7 @@ import java.util.List;
 @Path("/games/{gameId}/gamemodes/{gameModeId}/matches")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Authenticated
+@RolesAllowed("user")
 public class MatchController {
 
     @Inject

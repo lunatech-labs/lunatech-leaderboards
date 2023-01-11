@@ -7,4 +7,4 @@ SELECT gamemodes.name, gamemodes.rules, gameid.id
 FROM gameid, gamemodes;
 
 INSERT INTO app_user(email, displayname)
-VALUES ('testuser1@email.nl', 'Test User 1'), ('testuser2@email.nl', 'Test User 2');
+VALUES ('user@test.com', 'User'), ('admin@test.com', 'Admin');

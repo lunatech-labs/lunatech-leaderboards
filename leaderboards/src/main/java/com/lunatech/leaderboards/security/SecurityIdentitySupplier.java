@@ -5,9 +5,7 @@ import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.control.ActivateRequestContext;
 import java.util.function.Supplier;
 
