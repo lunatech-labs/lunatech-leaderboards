@@ -5,11 +5,8 @@ import com.lunatech.leaderboards.dto.match.MatchPostDto;
 import com.lunatech.leaderboards.entity.Match;
 import com.lunatech.leaderboards.entity.User;
 import com.lunatech.leaderboards.service.MatchService;
-import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.Authenticated;
-import io.quarkus.security.identity.SecurityIdentity;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -22,11 +19,8 @@ import java.util.List;
 @Path("/games/{gameId}/gamemodes/{gameModeId}/matches")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed("user")
+@Authenticated
 public class MatchController {
-
-    @Inject
-    SecurityIdentity securityIdentity;
 
     @Inject
     MatchService matchService;
@@ -58,15 +52,10 @@ public class MatchController {
     @POST
     @Path("/{matchId}/accept")
     @Transactional
-    public Response accept(Long matchId) {
-        User user = User.find("email", securityEmail()).singleResult();
+    public Response accept(Long matchId, @HeaderParam("email") String email) {
+        User user = User.find("email", email).singleResult();
         matchService.accept(matchId, user.id);
 
         return Response.ok().build();
-    }
-
-    private String securityEmail() {
-        OidcJwtCallerPrincipal oidcPrincipal = (OidcJwtCallerPrincipal) securityIdentity.getPrincipal();
-        return oidcPrincipal.getClaim("email");
     }
 }

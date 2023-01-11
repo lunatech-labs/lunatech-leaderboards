@@ -9,11 +9,12 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
-    @Inject WebApplicationErrorProvider webApplicationErrorProvider;
+    @Inject
+    WebApplicationExceptionMapper webApplicationExceptionMapper;
 
 
     @Override
     public Response toResponse(NotFoundException e) {
-        return webApplicationErrorProvider.toResponse(e);
+        return webApplicationExceptionMapper.toResponse(e);
     }
 }

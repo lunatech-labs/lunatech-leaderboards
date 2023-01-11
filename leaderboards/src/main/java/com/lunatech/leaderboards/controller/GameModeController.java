@@ -7,7 +7,6 @@ import com.lunatech.leaderboards.entity.Game;
 import com.lunatech.leaderboards.entity.GameMode;
 import io.quarkus.security.Authenticated;
 
-import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -20,7 +19,7 @@ import java.util.Objects;
 @Path("/games/{gameId}/gamemodes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed("user")
+@Authenticated
 public class GameModeController {
 
     @PathParam("gameId")

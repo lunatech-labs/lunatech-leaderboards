@@ -7,7 +7,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class JsonDeserializationProvider implements ExceptionMapper<ReaderException> {
+public class ReaderExceptionMapper implements ExceptionMapper<ReaderException> {
     @Override
     public Response toResponse(ReaderException e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

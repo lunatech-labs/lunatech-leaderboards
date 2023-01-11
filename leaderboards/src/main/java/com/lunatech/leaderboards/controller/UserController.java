@@ -3,12 +3,8 @@ package com.lunatech.leaderboards.controller;
 import com.lunatech.leaderboards.dto.user.UserDto;
 import com.lunatech.leaderboards.dto.user.UserPostDto;
 import com.lunatech.leaderboards.entity.User;
-import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
 import io.quarkus.security.Authenticated;
-import io.quarkus.security.identity.SecurityIdentity;
 
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,16 +15,15 @@ import java.util.List;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed("user")
+@Authenticated
 public class UserController {
 
-    @Inject
-    SecurityIdentity securityIdentity;
+    @HeaderParam("email")
+    private String email;
 
     @GET
     @Path("/me")
     public Response me() {
-        String email = securityEmail();
         return User.<User>find("email", email).singleResultOptional()
                 .map(user -> Response.ok(new UserDto(user)).build())
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not in leaderboards"));
@@ -49,20 +44,15 @@ public class UserController {
         return Response.ok(dto).build();
     }
 
-    @POST
+    @PUT
     @Transactional
     @Authenticated
+    //To fix, should retrieve user
     public Response add(UserPostDto body) {
-        String email = securityEmail();
         User user = body.toEntity(email);
         user.persist();
         return Response.created(URI.create("/users/" + user.id))
                 .entity(new UserDto(user))
                 .build();
-    }
-
-    private String securityEmail() {
-        OidcJwtCallerPrincipal oidcPrincipal = (OidcJwtCallerPrincipal) securityIdentity.getPrincipal();
-        return oidcPrincipal.getClaim("email");
     }
 }
