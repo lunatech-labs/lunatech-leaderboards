@@ -20,5 +20,8 @@ quarkus:
       enable: false
 
   # Swagger
+  smallrye-openapi:
+    security-scheme: oidc
   swagger-ui:
     always-include: true
+    oauth2-redirect-url: http://localhost:8080/q/swagger-ui/oauth2-redirect.html

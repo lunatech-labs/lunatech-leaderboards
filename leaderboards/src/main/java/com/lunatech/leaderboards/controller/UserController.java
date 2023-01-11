@@ -4,6 +4,13 @@ import com.lunatech.leaderboards.dto.user.UserDto;
 import com.lunatech.leaderboards.dto.user.UserPostDto;
 import com.lunatech.leaderboards.entity.User;
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -18,11 +25,13 @@ import java.util.List;
 @Authenticated
 public class UserController {
 
+    @Parameter(hidden = true)
     @HeaderParam("email")
     private String email;
 
     @GET
     @Path("/me")
+    @APIResponseSchema(UserDto.class)
     public Response me() {
         return User.<User>find("email", email).singleResultOptional()
                 .map(user -> Response.ok(new UserDto(user)).build())
@@ -30,6 +39,10 @@ public class UserController {
     }
 
     @GET
+    @APIResponse(content = @Content(schema = @Schema(
+            type = SchemaType.ARRAY,
+            implementation = UserDto.class
+    )))
     public Response list() {
         List<User> users = User.listAll();
         List<UserDto> dtos = users.stream().map(UserDto::new).toList();
@@ -38,6 +51,7 @@ public class UserController {
 
     @GET
     @Path("/{userId}")
+    @APIResponseSchema(UserDto.class)
     public Response get(Long userId) {
         User user = User.findById(userId);
         UserDto dto = new UserDto(user);
@@ -47,6 +61,7 @@ public class UserController {
     @PUT
     @Transactional
     @Authenticated
+    @APIResponseSchema(UserDto.class)
     //To fix, should retrieve user
     public Response add(UserPostDto body) {
         User user = body.toEntity(email);

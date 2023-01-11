@@ -1,3 +1,5 @@
 quarkus:
   oidc:
     auth-server-url: ${KEYCLOAK_HOST}/realms/lunatech
+  smallrye-openapi:
+    oidc-open-id-connect-url: ${KEYCLOAK_HOST}/auth/realms/lunatech/.well-known/openid-configuration

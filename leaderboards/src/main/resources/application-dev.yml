@@ -16,3 +16,8 @@ quarkus:
       enabled: true
       realm-path: quarkus-realm.json
       port: 8081
+
+  # Swagger
+  smallrye-openapi:
+    security-scheme-name: SecurityScheme
+    oidc-open-id-connect-url: http://localhost:8081/realms/Quarkus/.well-known/openid-configuration

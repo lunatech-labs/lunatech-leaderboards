@@ -6,6 +6,12 @@ import com.lunatech.leaderboards.entity.Match;
 import com.lunatech.leaderboards.entity.User;
 import com.lunatech.leaderboards.service.MatchService;
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -32,6 +38,10 @@ public class MatchController {
     private Long gameModeId;
 
     @GET
+    @APIResponse(content = @Content(schema = @Schema(
+            type = SchemaType.ARRAY,
+            implementation = MatchDto.class
+    )))
     public Response list() {
         Collection<Match> matches = matchService.findByGameMode(gameModeId);
         List<MatchDto> matchesDto = matches.stream().map(MatchDto::new).toList();
@@ -40,6 +50,7 @@ public class MatchController {
 
     @POST
     @Transactional
+    @APIResponseSchema(MatchDto.class)
     public Response add(MatchPostDto body) {
         Match match = body.toEntity();
         matchService.save(match);
@@ -52,7 +63,8 @@ public class MatchController {
     @POST
     @Path("/{matchId}/accept")
     @Transactional
-    public Response accept(Long matchId, @HeaderParam("email") String email) {
+    @APIResponseSchema(MatchDto.class)
+    public Response accept(Long matchId, @Parameter(hidden = true) @HeaderParam("email") String email) {
         User user = User.find("email", email).singleResult();
         matchService.accept(matchId, user.id);
 

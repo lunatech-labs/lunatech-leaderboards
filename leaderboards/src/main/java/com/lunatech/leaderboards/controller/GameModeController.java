@@ -6,6 +6,11 @@ import com.lunatech.leaderboards.dto.gamemode.GameModePostDto;
 import com.lunatech.leaderboards.entity.Game;
 import com.lunatech.leaderboards.entity.GameMode;
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -26,6 +31,10 @@ public class GameModeController {
     private Long gameId;
 
     @GET
+    @APIResponse(content = @Content(schema = @Schema(
+            type = SchemaType.ARRAY,
+            implementation = GameModeDto.class
+    )))
     public Response list() {
         Game game = Game.findById(gameId);
         List<GameMode> gameModes = game.gameModes;
@@ -36,6 +45,7 @@ public class GameModeController {
 
     @GET
     @Path("/{gameModeId}")
+    @APIResponseSchema(GameModeDto.class)
     public Response leaderboard(Long gameModeId) {
         GameMode gameMode = GameMode.findByIdWithLeaderboard(gameModeId);
         return Response.ok(new GameModeLeaderboardDto(gameMode)).build();
@@ -43,6 +53,7 @@ public class GameModeController {
 
     @POST
     @Transactional
+    @APIResponseSchema(GameModeDto.class)
     public Response add(@Valid GameModePostDto body) {
         GameMode gameMode = body.toEntity();
         if(!Objects.equals(gameMode.game.id, gameId))
@@ -58,6 +69,7 @@ public class GameModeController {
     @DELETE
     @Path("/{gameModeId}")
     @Transactional
+    @APIResponseSchema(GameModeDto.class)
     public Response delete(@Valid Long gameModeId) {
         GameMode gameMode = GameMode.findById(gameModeId);
         if(!Objects.equals(gameMode.game.id, gameId))
