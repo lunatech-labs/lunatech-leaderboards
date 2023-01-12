@@ -1,16 +1,16 @@
 package com.lunatech.leaderboard.client.graphql.lunagraph;
 
-import io.quarkus.oidc.client.Tokens;
 import io.smallrye.graphql.client.typesafe.api.TypesafeGraphQLClientBuilder;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import javax.inject.Singleton;
+import javax.enterprise.context.RequestScoped;
 
 public class GraphQLClients {
 
-    @Singleton
-    public LunagraphApi lunagraphApi(Tokens tokens) {
+    @RequestScoped
+    public LunagraphApi lunagraphApi(JsonWebToken jwt) {
         return TypesafeGraphQLClientBuilder.newBuilder()
-                .header("Authorization", "Bearer " + tokens.getAccessToken())
+                .header("Authorization", "Bearer " + jwt.getRawToken())
                 .configKey("lunagraph")
                 .build(LunagraphApi.class);
     }

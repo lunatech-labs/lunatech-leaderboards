@@ -28,6 +28,7 @@ public class RequestFilter implements ContainerRequestFilter {
     private Optional<String> securityEmail() {
         return Optional.ofNullable(securityIdentity)
                 .map(SecurityIdentity::getPrincipal)
+                .filter(principal -> principal instanceof OidcJwtCallerPrincipal)
                 .map(principal -> (OidcJwtCallerPrincipal) principal)
                 .map(principal -> principal.getClaim("email"));
     }
