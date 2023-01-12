@@ -8,6 +8,8 @@ quarkus:
 
   # Security
   oidc:
+    credentials:
+      secret: secret
     tls:
       verification: none
 
