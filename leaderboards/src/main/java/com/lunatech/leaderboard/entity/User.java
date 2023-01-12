@@ -3,6 +3,7 @@ package com.lunatech.leaderboard.entity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Table(name = "app_user")
@@ -22,4 +23,8 @@ public class User extends PanacheEntityBase {
 
     @Column(name = "profilepicurl")
     public String profilePicUrl;
+
+    public static Optional<User> findByEmail(String email) {
+        return find("email", email).firstResultOptional();
+    }
 }

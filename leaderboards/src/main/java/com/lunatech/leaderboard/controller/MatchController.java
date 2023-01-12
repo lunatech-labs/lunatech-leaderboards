@@ -5,6 +5,7 @@ import com.lunatech.leaderboard.dto.match.MatchPostDto;
 import com.lunatech.leaderboard.entity.Match;
 import com.lunatech.leaderboard.entity.User;
 import com.lunatech.leaderboard.service.MatchService;
+import com.lunatech.leaderboard.service.UserService;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -31,6 +32,9 @@ public class MatchController {
     @Inject
     MatchService matchService;
 
+    @Inject
+    UserService userService;
+
     @PathParam("gameId")
     private Long gameId;
 
@@ -52,7 +56,7 @@ public class MatchController {
     @Transactional
     @APIResponseSchema(MatchDto.class)
     public Response add(MatchPostDto body) {
-        Match match = body.toEntity();
+        Match match = body.toEntity(userService);
         matchService.save(match);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameModeId+"/matches/"+match.id))
