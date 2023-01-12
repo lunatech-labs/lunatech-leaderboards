@@ -13,6 +13,12 @@ quarkus:
     tls:
       verification: none
 
+  oidc-client:
+    auth-server-url: http://localhost:8081/realms/Quarkus
+    client-id: leaderboards-backend
+    credentials:
+      secret: secret
+
   keycloak:
     devservices:
       enabled: true
