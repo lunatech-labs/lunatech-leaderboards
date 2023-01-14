@@ -1,6 +1,6 @@
 package com.lunatech.leaderboard.service;
 
-import com.lunatech.leaderboard.dto.leaderboarduser.MatchExpectedResult;
+import com.lunatech.leaderboard.model.leaderboarduser.MatchExpectedResult;
 import com.lunatech.leaderboard.entity.*;
 import io.quarkus.hibernate.orm.panache.Panache;
 

@@ -2,6 +2,7 @@ package com.lunatech.leaderboard.controller;
 
 import com.lunatech.leaderboard.dto.game.GameDto;
 import com.lunatech.leaderboard.entity.Game;
+import com.lunatech.leaderboard.mapper.game.GameDtoMapper;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -9,6 +10,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -22,6 +25,9 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Authenticated
 public class GameController {
+
+    @Inject
+    GameDtoMapper gameDtoMapper;
 
     @GET
     @APIResponse(content = @Content(schema = @Schema(
@@ -37,8 +43,9 @@ public class GameController {
     @POST
     @Transactional
     @APIResponseSchema(GameDto.class)
+    @RolesAllowed("admin")
     public Response add(@Valid GameDto body) {
-        Game game = body.toEntity();
+        Game game = gameDtoMapper.toEntity(body);
         game.persist();
         return Response.created(URI.create("/games/"+game.id))
                 .entity(new GameDto(game))

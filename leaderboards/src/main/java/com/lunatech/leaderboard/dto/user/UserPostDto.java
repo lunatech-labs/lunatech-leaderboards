@@ -1,14 +1,9 @@
 package com.lunatech.leaderboard.dto.user;
 
-import com.lunatech.leaderboard.entity.User;
+import javax.validation.constraints.NotBlank;
 
-public record UserPostDto(String displayName, String profilePicUrl) {
-
-    public User toEntity(String email) {
-        User user = new User();
-        user.email = email;
-        user.displayName = displayName;
-        user.profilePicUrl = profilePicUrl;
-        return user;
-    }
+public record UserPostDto(
+        @NotBlank String email,
+        @NotBlank String displayName,
+        String profilePicUrl) {
 }

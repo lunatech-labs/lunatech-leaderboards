@@ -4,8 +4,8 @@ import com.lunatech.leaderboard.dto.match.MatchDto;
 import com.lunatech.leaderboard.dto.match.MatchPostDto;
 import com.lunatech.leaderboard.entity.Match;
 import com.lunatech.leaderboard.entity.User;
+import com.lunatech.leaderboard.mapper.match.MatchDtoMapper;
 import com.lunatech.leaderboard.service.MatchService;
-import com.lunatech.leaderboard.service.UserService;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -14,6 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -33,7 +34,7 @@ public class MatchController {
     MatchService matchService;
 
     @Inject
-    UserService userService;
+    MatchDtoMapper matchDtoMapper;
 
     @PathParam("gameId")
     private Long gameId;
@@ -55,8 +56,10 @@ public class MatchController {
     @POST
     @Transactional
     @APIResponseSchema(MatchDto.class)
+    @RolesAllowed("admin")
     public Response add(MatchPostDto body) {
-        Match match = body.toEntity(userService);
+        matchDtoMapper.setGameModeId(gameModeId);
+        Match match = matchDtoMapper.toEntity(body);
         matchService.save(match);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameModeId+"/matches/"+match.id))

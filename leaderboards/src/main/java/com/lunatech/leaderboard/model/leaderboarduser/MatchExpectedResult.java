@@ -1,4 +1,4 @@
-package com.lunatech.leaderboard.dto.leaderboarduser;
+package com.lunatech.leaderboard.model.leaderboarduser;
 
 public record MatchExpectedResult(double teamAExpectedResult, double teamBExpectedResult) {
 }

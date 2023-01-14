@@ -1,4 +1,4 @@
-package com.lunatech.leaderboard.dto.leaderboarduser;
+package com.lunatech.leaderboard.model.leaderboarduser;
 
 import com.lunatech.leaderboard.dto.user.UserDto;
 import com.lunatech.leaderboard.entity.LeaderboardUser;

@@ -3,6 +3,7 @@ package com.lunatech.leaderboard.controller;
 import com.lunatech.leaderboard.dto.user.UserDto;
 import com.lunatech.leaderboard.dto.user.UserPostDto;
 import com.lunatech.leaderboard.entity.User;
+import com.lunatech.leaderboard.mapper.user.UserDtoMapper;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -11,6 +12,8 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +26,9 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Authenticated
 public class UserController {
+
+    @Inject
+    UserDtoMapper userDtoMapper;
 
     @Parameter(hidden = true)
     @HeaderParam("email")
@@ -57,13 +63,12 @@ public class UserController {
         return Response.ok(dto).build();
     }
 
-    @PUT
+    @POST
     @Transactional
-    @Authenticated
+    @RolesAllowed("admin")
     @APIResponseSchema(UserDto.class)
-    //To fix, should retrieve user
     public Response add(UserPostDto body) {
-        User user = body.toEntity(email);
+        User user = userDtoMapper.toEntity(body);
         user.persist();
         return Response.created(URI.create("/users/" + user.id))
                 .entity(new UserDto(user))
