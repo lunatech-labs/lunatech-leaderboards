@@ -51,6 +51,11 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-flyway</artifactId>
+        </dependency>
+
         <!-- Quarkus web -->
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -6,23 +6,28 @@ quarkus:
     jdbc:
       url: jdbc:postgresql://localhost:5432/leaderboards?stringtype=unspecified
 
+  # Flyway
+  flyway:
+    clean-at-start: true
+    migrate-at-start: true
+    validate-on-migrate: true
+    locations: "db/migration,db/sample"
+
   # Security
   oidc:
-    credentials:
-      secret: secret
+    auth-server-url: http://localhost:8081/auth/realms/Quarkus
+    client-id: leaderboards-backend
     tls:
       verification: none
 
   keycloak:
     devservices:
-      enabled: true
-      realm-path: quarkus-realm.json
-      port: 8081
+      enabled: false
 
   # Swagger
   smallrye-openapi:
     security-scheme-name: SecurityScheme
-    oidc-open-id-connect-url: http://localhost:8081/realms/Quarkus/.well-known/openid-configuration
+    oidc-open-id-connect-url: http://localhost:8081/auth/realms/Quarkus/.well-known/openid-configuration
 
   log:
     category:

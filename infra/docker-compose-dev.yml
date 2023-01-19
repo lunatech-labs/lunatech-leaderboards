@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15.1
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=leaderboards
+    ports:
+      - '5432:5432'
+    volumes:
+      - dbdata:/data
+  keycloak:
+    image: jboss/keycloak:16.1.1
+    container_name: keycloak
+    environment:
+      DB_VENDOR: H2
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: "/opt/jboss/keycloak/realm-config/quarkus-realm.json"
+    volumes:
+      - ./keycloak:/opt/jboss/keycloak/realm-config
+    ports:
+      - "8081:8080"
+volumes:
+  dbdata:
+  appdata:

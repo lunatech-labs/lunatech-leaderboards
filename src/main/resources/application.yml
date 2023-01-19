@@ -6,6 +6,11 @@ quarkus:
     password: ${POSTGRES_PASSWORD}
     jdbc:
       url: jdbc:postgresql://db:5432/leaderboards?stringtype=unspecified
+  # Flyway
+  flyway:
+    migrate-at-start: true
+    validate-on-migrate: true
+    locations: "db/migration"
 
   # Security
   oidc:
@@ -20,10 +25,6 @@ quarkus:
     client-id: leaderboards-backend
     credentials:
       secret: ${KEYCLOAK_SECRET}
-
-  keycloak:
-    policy-enforcer:
-      enable: false
 
   # Swagger
   smallrye-openapi:
