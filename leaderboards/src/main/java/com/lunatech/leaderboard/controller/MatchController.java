@@ -56,10 +56,10 @@ public class MatchController {
     @POST
     @Transactional
     @APIResponseSchema(MatchDto.class)
-    @RolesAllowed("admin")
     public Response add(MatchPostDto body) {
         matchDtoMapper.setGameModeId(gameModeId);
         Match match = matchDtoMapper.toEntity(body);
+
         matchService.save(match);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameModeId+"/matches/"+match.id))

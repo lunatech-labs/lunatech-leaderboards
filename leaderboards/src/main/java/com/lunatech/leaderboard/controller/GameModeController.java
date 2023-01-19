@@ -6,6 +6,7 @@ import com.lunatech.leaderboard.dto.gamemode.GameModePostDto;
 import com.lunatech.leaderboard.entity.Game;
 import com.lunatech.leaderboard.entity.GameMode;
 import com.lunatech.leaderboard.mapper.gamemode.GameModeDtoMapper;
+import com.lunatech.leaderboard.service.GameModeService;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -33,6 +34,9 @@ public class GameModeController {
     @Inject
     GameModeDtoMapper gameModeDtoMapper;
 
+    @Inject
+    GameModeService gameModeService;
+
     @PathParam("gameId")
     private Long gameId;
 
@@ -42,8 +46,7 @@ public class GameModeController {
             implementation = GameModeDto.class
     )))
     public Response list() {
-        Game game = Game.findById(gameId);
-        List<GameMode> gameModes = game.gameModes;
+        List<GameMode> gameModes = gameModeService.findAllByGame(gameId);
         List<GameModeDto> response = gameModes.stream().map(GameModeDto::new).toList();
 
         return Response.ok(response).build();
@@ -65,10 +68,7 @@ public class GameModeController {
         gameModeDtoMapper.setGameId(gameId);
         GameMode gameMode = gameModeDtoMapper.toEntity(body);
 
-        if(!Objects.equals(gameMode.game.id, gameId))
-            throw new BadRequestException("GameMode game does not match path");
-
-        gameMode.persist();
+        gameModeService.add(gameMode);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameMode.id))
                 .entity(new GameModeDto(gameMode))
@@ -79,12 +79,12 @@ public class GameModeController {
     @Path("/{gameModeId}")
     @Transactional
     @APIResponseSchema(GameModeDto.class)
-    public Response delete(@Valid Long gameModeId) {
+    public Response delete(Long gameModeId) {
         GameMode gameMode = GameMode.findById(gameModeId);
         if(!Objects.equals(gameMode.game.id, gameId))
             throw new BadRequestException("GameMode game does not match path");
 
-        gameMode.delete();
+        gameModeService.delete(gameMode);
 
         return Response.ok(new GameModeDto(gameMode)).build();
     }

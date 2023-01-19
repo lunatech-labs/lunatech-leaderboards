@@ -22,7 +22,7 @@ public class Game extends PanacheEntityBase {
     @Column(name = "image_url")
     public String imageUrl;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<GameMode> gameModes = new ArrayList<>();
 
     public static Game findByIdWithGameModes(Long id) {

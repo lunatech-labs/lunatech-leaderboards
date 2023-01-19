@@ -3,6 +3,7 @@ package com.lunatech.leaderboard.controller;
 import com.lunatech.leaderboard.dto.game.GameDto;
 import com.lunatech.leaderboard.entity.Game;
 import com.lunatech.leaderboard.mapper.game.GameDtoMapper;
+import com.lunatech.leaderboard.service.GameService;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -18,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 @Path("/games")
@@ -29,13 +31,16 @@ public class GameController {
     @Inject
     GameDtoMapper gameDtoMapper;
 
+    @Inject
+    GameService gameService;
+
     @GET
     @APIResponse(content = @Content(schema = @Schema(
             type = SchemaType.ARRAY,
             implementation = GameDto.class
     )))
     public Response list() {
-        List<Game> games = Game.findAll().list();
+        Collection<Game> games = gameService.findAll();
         List<GameDto> dtos = games.stream().map(GameDto::new).toList();
         return Response.ok(dtos).build();
     }
@@ -46,7 +51,7 @@ public class GameController {
     @RolesAllowed("admin")
     public Response add(@Valid GameDto body) {
         Game game = gameDtoMapper.toEntity(body);
-        game.persist();
+        gameService.add(game);
         return Response.created(URI.create("/games/"+game.id))
                 .entity(new GameDto(game))
                 .build();
@@ -57,8 +62,7 @@ public class GameController {
     @Transactional
     @APIResponseSchema(GameDto.class)
     public Response delete(Long gameId) {
-        Game game = Game.findById(gameId);
-        game.delete();
+        Game game = gameService.delete(gameId);
         return Response.ok(game).build();
     }
 }
