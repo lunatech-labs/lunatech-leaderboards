@@ -39,3 +39,10 @@ quarkus:
   smallrye-graphql-client:
     lunagraph:
       url: https://api-dev.lunatech.cloud/graphql
+
+  # Building
+  container-image:
+    group: lunatech-labs
+    name: lunacloud-leaderboards
+    registry: ghcr.io
+    additional-tags: latest
