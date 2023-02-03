@@ -1,0 +1,17 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: lunatech-leaderboards-db
+spec:
+  teamId: "lunatech"
+  volume:
+    size: 1Gi
+  numberOfInstances: 1
+  users:
+    leaderboards:
+      - superuser
+      - createdb
+  databases:
+    leaderboards: leaderboards
+  postgresql:
+    version: "14"

@@ -5,7 +5,7 @@ quarkus:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     jdbc:
-      url: jdbc:postgresql://db:5432/leaderboards?stringtype=unspecified
+      url: jdbc:${POSTGRES_URL}/leaderboards?stringtype=unspecified
   # Flyway
   flyway:
     migrate-at-start: true
