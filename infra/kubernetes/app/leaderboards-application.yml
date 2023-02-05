@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: leaderboards
+  namespace: argocd
+spec:
+  project: leaderboards
+  source:
+    repoURL: https://github.com/lunatech-labs/lunatech-lunacloud-workloads.git
+    targetRevision: HEAD
+    path: manifests/leaderboards
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: leaderboards
+  syncPolicy:
+    automated: { }
+    syncOptions:
+      - CreateNamespace=true
