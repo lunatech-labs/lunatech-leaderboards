@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leaderboards-service
+  namespace: leaderboards
+  labels:
+    app: leaderboards
+spec:
+  selector:
+    app: leaderboards
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http-web-svc
+  type: ClusterIP
