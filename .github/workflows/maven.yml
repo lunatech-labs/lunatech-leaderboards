@@ -30,7 +30,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Env var checks
-      run: echo version - $QUARKUS_APPLICATION_VERSION; echo pushing - $QUARKUS_CONTAINER_IMAGE_PUSH; echo username - $QUARKUS_CONTAINER_IMAGE_USERNAME;
     - name: Build and conditionally push container image with Maven
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: ./mvnw -B package -Dquarkus.container-image.build=true

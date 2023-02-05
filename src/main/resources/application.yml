@@ -6,6 +6,7 @@ quarkus:
     password: ${POSTGRES_PASSWORD}
     jdbc:
       url: jdbc:${POSTGRES_URL}/leaderboards?stringtype=unspecified
+
   # Flyway
   flyway:
     migrate-at-start: true
@@ -14,17 +15,9 @@ quarkus:
 
   # Security
   oidc:
-    credentials:
-      secret: ${KEYCLOAK_SECRET}
     client-id: leaderboards-backend
     tls:
       verification: required
-
-  oidc-client:
-    auth-server-url: ${KEYCLOAK_HOST}/realms/lunatech
-    client-id: leaderboards-backend
-    credentials:
-      secret: ${KEYCLOAK_SECRET}
 
   # Swagger
   smallrye-openapi:

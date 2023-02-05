@@ -42,4 +42,4 @@ spec:
                   name: leaderboards.lunatech-leaderboards-db.credentials.postgresql.acid.zalan.do
                   key: password
             - name: KEYCLOAK_HOST
-              value: https://keycloak.lunatech.com/realms/lunatech
+              value: https://keycloak.lunatech.com
