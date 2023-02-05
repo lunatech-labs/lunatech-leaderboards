@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 @Path("/users")
@@ -39,7 +40,7 @@ public class UserController {
     @APIResponseSchema(UserDto.class)
     public Response me() {
         return User.<User>find("email", email).singleResultOptional()
-                .map(user -> Response.ok(new UserDto(user)).build())
+                .map(user -> Response.ok(userDtoMapper.toDto(user)).build())
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not in leaderboards"));
     }
 
@@ -50,7 +51,7 @@ public class UserController {
     )))
     public Response list() {
         List<User> users = User.listAll();
-        List<UserDto> dtos = users.stream().map(UserDto::new).toList();
+        Collection<UserDto> dtos = userDtoMapper.toDtos(users);
         return Response.ok(dtos).build();
     }
 
@@ -59,7 +60,7 @@ public class UserController {
     @APIResponseSchema(UserDto.class)
     public Response get(Long userId) {
         User user = User.findById(userId);
-        UserDto dto = new UserDto(user);
+        UserDto dto = userDtoMapper.toDto(user);
         return Response.ok(dto).build();
     }
 
@@ -71,7 +72,7 @@ public class UserController {
         User user = userDtoMapper.toEntity(body);
         user.persist();
         return Response.created(URI.create("/users/" + user.id))
-                .entity(new UserDto(user))
+                .entity(userDtoMapper.toDto(user))
                 .build();
     }
 }

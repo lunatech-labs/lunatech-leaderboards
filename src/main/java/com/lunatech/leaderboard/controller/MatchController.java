@@ -49,7 +49,7 @@ public class MatchController {
     )))
     public Response list() {
         Collection<Match> matches = matchService.findByGameMode(gameModeId);
-        List<MatchDto> matchesDto = matches.stream().map(MatchDto::new).toList();
+        Collection<MatchDto> matchesDto = matchDtoMapper.toDtos(matches);
         return Response.ok(matchesDto).build();
     }
 
@@ -63,7 +63,7 @@ public class MatchController {
         matchService.save(match);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameModeId+"/matches/"+match.id))
-                .entity(new MatchDto(match))
+                .entity(matchDtoMapper.toDto(match))
                 .build();
     }
 

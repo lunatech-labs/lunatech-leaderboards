@@ -1,7 +1,10 @@
 package com.lunatech.leaderboard.mapper.match;
 
+import com.lunatech.leaderboard.dto.match.MatchDto;
 import com.lunatech.leaderboard.dto.match.MatchPostDto;
+import com.lunatech.leaderboard.dto.matchuser.MatchUserDto;
 import com.lunatech.leaderboard.dto.matchuser.MatchUserPostDto;
+import com.lunatech.leaderboard.dto.user.UserDto;
 import com.lunatech.leaderboard.entity.GameMode;
 import com.lunatech.leaderboard.entity.Match;
 import com.lunatech.leaderboard.entity.MatchUser;
@@ -12,9 +15,10 @@ import com.lunatech.leaderboard.service.UserService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import java.util.List;
 
 @RequestScoped
-public class MatchDtoMapper implements DtoMapper<MatchPostDto, Match> {
+public class MatchDtoMapper implements DtoMapper<Match, MatchPostDto, MatchDto> {
 
     @Inject
     UserService userService;
@@ -33,6 +37,11 @@ public class MatchDtoMapper implements DtoMapper<MatchPostDto, Match> {
         return match;
     }
 
+    @Override
+    public MatchDto toDto(Match match) {
+        return new MatchDto(match.id, match.gameMode.id, match.outcome, match.confirmed, teamToDto(match.teamA), teamToDto(match.teamB));
+    }
+
     private MatchUser toMatchUser(MatchUserPostDto dto, Match match, MatchUser.Team team) {
         MatchUser matchUser = new MatchUser();
         matchUser.match = match;
@@ -42,6 +51,14 @@ public class MatchDtoMapper implements DtoMapper<MatchPostDto, Match> {
         matchUser.user = User.findByEmail(dto.userEmail())
                 .orElseGet(() -> userService.add(dto.userEmail()));
         return matchUser;
+    }
+
+    private MatchUserDto toMatchUserDto(MatchUser matchUser) {
+        return new MatchUserDto(new UserDto(matchUser.user), null, matchUser.team, matchUser.outcomeConfirmed);
+    }
+
+    private List<MatchUserDto> teamToDto(List<MatchUser> team) {
+        return team.stream().map(this::toMatchUserDto).toList();
     }
 
     public void setGameModeId(Long gameModeId) {

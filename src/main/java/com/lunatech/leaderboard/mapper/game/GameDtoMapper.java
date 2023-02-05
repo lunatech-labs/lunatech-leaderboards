@@ -7,7 +7,7 @@ import com.lunatech.leaderboard.mapper.DtoMapper;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class GameDtoMapper implements DtoMapper<GameDto, Game> {
+public class GameDtoMapper implements DtoMapper<Game, GameDto, GameDto> {
     @Override
     public Game toEntity(GameDto dto) {
         Game game = new Game();
@@ -15,5 +15,10 @@ public class GameDtoMapper implements DtoMapper<GameDto, Game> {
         game.name = dto.name();
         game.imageUrl = dto.imageUrl();
         return game;
+    }
+
+    @Override
+    public GameDto toDto(Game game) {
+        return new GameDto(game.id, game.name, game.imageUrl);
     }
 }

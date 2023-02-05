@@ -1,9 +1,7 @@
 package com.lunatech.leaderboard.controller;
 
 import com.lunatech.leaderboard.dto.gamemode.GameModeDto;
-import com.lunatech.leaderboard.dto.gamemode.GameModeDetailDto;
 import com.lunatech.leaderboard.dto.gamemode.GameModePostDto;
-import com.lunatech.leaderboard.entity.Game;
 import com.lunatech.leaderboard.entity.GameMode;
 import com.lunatech.leaderboard.mapper.gamemode.GameModeDtoMapper;
 import com.lunatech.leaderboard.service.GameModeService;
@@ -22,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,8 +46,7 @@ public class GameModeController {
     )))
     public Response list() {
         List<GameMode> gameModes = gameModeService.findAllByGame(gameId);
-        List<GameModeDto> response = gameModes.stream().map(GameModeDto::new).toList();
-
+        Collection<GameModeDto> response = gameModeDtoMapper.toDtos(gameModes);
         return Response.ok(response).build();
     }
 
@@ -57,7 +55,7 @@ public class GameModeController {
     @APIResponseSchema(GameModeDto.class)
     public Response leaderboard(Long gameModeId) {
         GameMode gameMode = GameMode.findByIdWithLeaderboard(gameModeId);
-        return Response.ok(new GameModeDetailDto(gameMode)).build();
+        return Response.ok(gameModeDtoMapper.toDto(gameMode)).build();
     }
 
     @POST
@@ -71,7 +69,7 @@ public class GameModeController {
         gameModeService.add(gameMode);
 
         return Response.created(URI.create("/games/"+gameId+"/gamemodes/"+gameMode.id))
-                .entity(new GameModeDto(gameMode))
+                .entity(gameModeDtoMapper.toDto(gameMode))
                 .build();
     }
 
@@ -86,6 +84,6 @@ public class GameModeController {
 
         gameModeService.delete(gameMode);
 
-        return Response.ok(new GameModeDto(gameMode)).build();
+        return Response.ok(gameModeDtoMapper.toDto(gameMode)).build();
     }
 }

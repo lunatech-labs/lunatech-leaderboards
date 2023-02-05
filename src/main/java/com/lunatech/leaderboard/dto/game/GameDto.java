@@ -9,7 +9,4 @@ public record GameDto(
         @NotBlank String name,
         String imageUrl
 ) {
-    public GameDto(Game game) {
-        this(game.id, game.name, game.imageUrl);
-    }
 }

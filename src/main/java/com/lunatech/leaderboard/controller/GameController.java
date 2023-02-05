@@ -41,7 +41,7 @@ public class GameController {
     )))
     public Response list() {
         Collection<Game> games = gameService.findAll();
-        List<GameDto> dtos = games.stream().map(GameDto::new).toList();
+        Collection<GameDto> dtos = gameDtoMapper.toDtos(games);
         return Response.ok(dtos).build();
     }
 
@@ -53,7 +53,7 @@ public class GameController {
         Game game = gameDtoMapper.toEntity(body);
         gameService.add(game);
         return Response.created(URI.create("/games/"+game.id))
-                .entity(new GameDto(game))
+                .entity(gameDtoMapper.toDto(game))
                 .build();
     }
 
@@ -63,6 +63,6 @@ public class GameController {
     @APIResponseSchema(GameDto.class)
     public Response delete(Long gameId) {
         Game game = gameService.delete(gameId);
-        return Response.ok(game).build();
+        return Response.ok(gameDtoMapper.toDto(game)).build();
     }
 }
