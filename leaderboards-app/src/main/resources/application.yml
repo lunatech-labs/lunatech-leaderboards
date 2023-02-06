@@ -36,6 +36,6 @@ quarkus:
   # Building
   container-image:
     group: lunatech-labs
-    name: lunacloud-leaderboards
+    name: lunatech-leaderboards
     registry: ghcr.io
     additional-tags: latest

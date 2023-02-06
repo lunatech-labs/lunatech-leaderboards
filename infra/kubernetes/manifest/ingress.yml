@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: leaderboards-ingress
+  namespace: leaderboards
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/hostname: api.lunatech.cloud
+    ingress.kubernetes.io/proxy-body-size: 100M
+    ingress.kubernetes.io/app-root: "/leaderboard"
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-provider.lunacloud.svc.cluster.local:8080/verify"
+    nginx.ingress.kubernetes.io/auth-signin: "https://lunatech.cloud/oauth2/start?rd=https://api.lunatech.cloud$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.lunatech.cloud
+      secretName: api-tls
+  rules:
+    - host: api.lunatech.cloud
+    - http:
+        paths:
+          - path: /leaderboards
+            pathType: Prefix
+            backend:
+              service:
+                name: leaderboards-service
+                port:
+                  name: http-web-svc

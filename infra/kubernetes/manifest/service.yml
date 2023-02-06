@@ -3,14 +3,13 @@ kind: Service
 metadata:
   name: leaderboards-service
   namespace: leaderboards
-  labels:
-    app: leaderboards
 spec:
   selector:
     app: leaderboards
+    tier: container
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: http-web-svc
+      targetPort: 8080
   type: ClusterIP
